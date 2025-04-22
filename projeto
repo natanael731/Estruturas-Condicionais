@@ -1,0 +1,83 @@
+package FiamaTrabalho;
+
+import java.util.Scanner;
+
+public class TRabalho01 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        double SalB;
+        int dep;
+        String PS, VT, VR, VA;
+
+        System.out.println("---calculadora de salario lIquido---");
+        System.out.println("olá!! insira aqui seu salario bruto: ");
+        SalB = sc.nextDouble();
+        System.out.print("insira aqui o número de dependentes: ");
+        dep = sc.nextInt();
+        System.out.print("qual o tipo do seu plano de saude? nenhum, basico ou avançado: ");
+        PS = sc.next();
+        System.out.print("Recebe vale transporte? (sim ou nao): ");
+        VT = sc.next();
+        System.out.print("Recebe vale alimentação? (sim ou nao): ");
+        VR = sc.next();
+        System.out.print("Recebe vale refeição? (sim ou nao): ");
+        VA = sc.next();
+
+        double INSS;
+        if (SalB <= 1302.00) {
+            INSS = SalB * 0.08;
+        } else if (SalB <= 2571.00) {
+            INSS = SalB * 0.09;
+        } else if (SalB <= 3856.00) {
+            INSS = SalB * 0.11;
+        } else {
+            INSS = SalB * 0.14;
+            if (INSS > 570.88) {
+                INSS = 570.88;
+            }
+        }
+
+        double baseIR = SalB - INSS - (dep * 189.59);
+        double ir;
+        if (baseIR <= 1903.98) {
+            ir = 0;
+        } else if (baseIR <= 2826.65) {
+            ir = baseIR * 0.075 - 142.80;
+        } else if (baseIR <= 3751.05) {
+            ir = baseIR * 0.15 - 354.80;
+        } else if (baseIR <= 4664.68) {
+            ir = baseIR * 0.225 - 636.13;
+        } else {
+            ir = baseIR * 0.275 - 869.36;
+        }
+
+        double descontoVT = VT.equals("sim") ? SalB * 0.06 : 0;
+        double descontoVA = VA.equals("sim") ? 200.00 : 0;
+        double descontoVR = VR.equals("sim") ? 250.00 : 0;
+
+        double descontoPlano = 0;
+        switch (PS) {
+            case "basico":
+                descontoPlano = 150.00;
+                break;
+            case "avancado":
+                descontoPlano = 300.00;
+                break;
+            case "nenhum":
+            default:
+                descontoPlano = 0;
+                break;
+        }
+        double totalDesc = INSS + ir + descontoVT + descontoVA + descontoVR + descontoPlano;
+        double salarioLiquido = SalB - totalDesc;
+        double percentual = (totalDesc / SalB) * 100;
+
+        System.out.println("\n---Resumo do Cálculo---");
+        System.out.printf("Salário Líquido: R$ %.2f\n", salarioLiquido);
+        System.out.printf("Total de Descontos: R$ %.2f\n", totalDesc);
+        System.out.printf("Percentual de Descontos: %.2f%%\n", percentual);
+
+        sc.close();
+    }
+}
